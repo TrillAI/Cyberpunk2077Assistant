@@ -1,0 +1,13 @@
+{
+  "name": "cyberpunk411",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cyberpunk411 — a PS4-only Cyberpunk 2077 field assistant with an interactive walkthrough, iconic gun routes and a 3D spinning eddie.",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test": "node tests/smoke.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^27.0.0"
+  }
+}

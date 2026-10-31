@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CYBERPUNK411 — Night City Field Assistant (PS4 Edition)</title>
+<meta name="description" content="Cyberpunk411: a strictly PlayStation 4 focus assistant for Cyberpunk 2077. Interactive walkthrough, high-end gun locations, beginner pop-ups, and a 3D spinning eddie." />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23fcee0a'/><text x='50' y='72' font-size='64' font-family='monospace' text-anchor='middle' fill='%23000'>C</text></svg>" />
+</head>
+<body>
+
+<noscript>
+  <div style="position:fixed;inset:0;z-index:10001;display:grid;place-items:center;background:#05060a;padding:30px;text-align:center;font-family:monospace;color:#fcee0a">
+    <div>
+      <h1 style="letter-spacing:.08em">CYBERPUNK411</h1>
+      <p style="color:#97a0b4;max-width:46ch">This assistant runs entirely in JavaScript — the spinning coin, the interactive
+      walkthrough, the pop-ups, all of it. Enable JavaScript and reload. Night City is not accessible without it.</p>
+    </div>
+  </div>
+</noscript>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SPLASH 1 — TRILL PRODUCTIONS (fades in, holds, fades out)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="trill-splash" class="trill-splash" aria-label="Trill Productions">
+  <div class="trill-splash__grain"></div>
+  <div class="trill-splash__scan"></div>
+  <div class="trill-splash__inner">
+    <p class="trill-splash__presents">A TOTALLY LEGAL BROADCAST FROM</p>
+    <h1 class="trill-splash__title" data-text="TRILL PRODUCTIONS">TRILL PRODUCTIONS</h1>
+    <div class="trill-splash__bar"><span></span></div>
+    <p class="trill-splash__sub">NIGHT CITY · 2077 · PS4 SIGNAL ONLY</p>
+  </div>
+  <p class="trill-splash__skip">PRESS ANY KEY / CLICK TO SKIP</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SPLASH 2 — BOOT / LOADING (rotating stoner-flavoured tips)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="boot" class="boot" hidden>
+  <div class="boot__grid"></div>
+  <div class="boot__hexes" id="boot-hexes" aria-hidden="true"></div>
+  <div class="boot__panel">
+    <div class="boot__coin-slot">
+      <div class="coin-stage coin-stage--boot" id="boot-coin-stage"></div>
+    </div>
+    <div class="boot__body">
+      <p class="eyebrow">CYBERPUNK<span class="accent">411</span> // SYSTEM BOOT</p>
+      <h2 class="boot__headline">JACKING IN TO NIGHT CITY</h2>
+      <p class="boot__line" id="boot-status">Rerouting power from a vending machine…</p>
+      <div class="boot__progress"><div class="boot__progress-fill" id="boot-progress-fill"></div></div>
+      <p class="boot__percent"><span id="boot-percent">0</span>% · <span id="boot-step">LOADING</span></p>
+
+      <div class="boot__tip-box">
+        <p class="boot__tip-label">// LOADING TIP <span id="boot-tip-index">001</span></p>
+        <p class="boot__tip" id="boot-tip">Loading…</p>
+      </div>
+
+      <p class="boot__tiny">Built for the PS4 build (patch 1.6x). No Phantom Liberty here, choom — that DLC never made it to last-gen.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN APP
+     ══════════════════════════════════════════════════════════════ -->
+<div id="app" class="app" hidden>
+
+  <div class="crt-overlay" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <div class="brand-mark">C411</div>
+      <div>
+        <h1 class="brand-title">CYBERPUNK<span>411</span></h1>
+        <p class="brand-sub">PS4 EDITION · PATCH 1.6x · NIGHT CITY FIELD ASSISTANT</p>
+      </div>
+    </div>
+
+    <div class="topbar__tools">
+      <div class="eddies" title="Your totally real, totally not-made-up wallet">
+        <span class="eddies__icon">€$</span>
+        <span class="eddies__value" id="eddie-count">0</span>
+        <span class="eddies__label">EDDIES</span>
+      </div>
+      <button class="chip-btn" id="btn-sandevistan" title="Activate Sandevistan — speeds up every animation on this page">
+        <span class="chip-btn__dot"></span> SANDEVISTAN
+      </button>
+      <button class="chip-btn" id="btn-bd" title="Toggle Braindance vision — scanlines and a mode overlay">
+        <span class="chip-btn__dot"></span> BRAINDANCE
+      </button>
+      <button class="chip-btn chip-btn--ghost" id="btn-sound" title="Tiny UI blips (off by default, we are polite)">
+        <span class="chip-btn__dot"></span> SOUND: OFF
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabbar" id="tabbar" aria-label="Sections">
+    <button class="tab is-active" data-view="home">01 · JACK IN</button>
+    <button class="tab" data-view="start">02 · START HERE</button>
+    <button class="tab" data-view="arsenal">03 · HIGH-END GUNS</button>
+    <button class="tab" data-view="walkthrough">04 · WALKTHROUGH</button>
+    <button class="tab" data-view="beginner">05 · BEGINNER CHECKS</button>
+    <button class="tab" data-view="money">06 · EDDIES</button>
+    <button class="tab" data-view="ps4">07 · PS4 TRUTH</button>
+    <button class="tab" data-view="faq">08 · FAQ + JOKES</button>
+  </nav>
+
+  <main class="views" id="views">
+
+    <!-- ───────────────────────── 01 HOME ───────────────────────── -->
+    <section class="view is-active" id="view-home">
+      <div class="hero">
+        <div class="hero__text">
+          <p class="eyebrow">STREET-LEVEL INTEL · 100% LAST-GEN</p>
+          <h2 class="hero__title">Welcome to the <span class="glitch" data-text="PS4 build">PS4 build</span>, choom.</h2>
+          <p class="hero__lead">
+            This assistant is <strong>strictly for Cyberpunk 2077 on PlayStation 4</strong> — the version that
+            stopped at patch 1.6x, never got Phantom Liberty, and never got the big 2.0 overhaul.
+            Almost every guide on the internet was written for PS5 or PC. This one isn't. Every gun location,
+            every quest step, every warning below assumes <em>your</em> build.
+          </p>
+          <p class="hero__lead hero__lead--dim">
+            Scroll nothing, choom. Use the tabs. The walkthrough <strong>waits for you</strong>, the beginner
+            pop-ups ask before they assume, and the coin spins because we have to put a spinning 3D coin
+            somewhere or the union gets mad.
+          </p>
+          <div class="hero__cta">
+            <button class="btn btn--primary" data-goto="walkthrough">▶ START THE INTERACTIVE WALKTHROUGH</button>
+            <button class="btn btn--ghost" data-goto="arsenal">FIND A HIGH-END GUN</button>
+            <button class="btn btn--ghost" id="btn-replay-splash">REPLAY SPLASH</button>
+          </div>
+          <p class="hero__hint">Drag the coin. Flip the coin. Click it 7 times if you're the kind of person who clicks things 7 times.</p>
+        </div>
+
+        <div class="hero__stage">
+          <div class="coin-stage" id="hero-coin-stage"></div>
+          <div class="coin-readout">
+            <div><span>SPIN</span><b id="coin-readout-spin">0.0°/s</b></div>
+            <div><span>FACE</span><b id="coin-readout-face">€$</b></div>
+            <div><span>VALUE</span><b>1 EDDIE</b></div>
+          </div>
+          <div class="coin-buttons">
+            <button class="btn btn--mini" id="coin-auto">AUTO-SPIN</button>
+            <button class="btn btn--mini" id="coin-flip">FLIP</button>
+            <button class="btn btn--mini" id="coin-flick">FLICK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="statstrip">
+        <div class="stat"><b id="stat-guns">0</b><span>iconic guns mapped</span></div>
+        <div class="stat"><b id="stat-steps">0</b><span>walkthrough checkpoints</span></div>
+        <div class="stat"><b id="stat-checks">0</b><span>beginner item checks</span></div>
+        <div class="stat"><b>2</b><span>splash screens</span></div>
+        <div class="stat"><b>1</b><span>spinning 3D coin</span></div>
+      </div>
+
+      <div class="grid grid--3">
+        <article class="card card--accent">
+          <p class="eyebrow">READ THIS FIRST</p>
+          <h3>You are on last-gen. Own it.</h3>
+          <p>No 2.0 perks. No cyberware capacity. No metro. No Dogtown. What you <em>do</em> get: the whole
+            base story, every base-game iconic, the Edgerunners 1.6 content, and a save file that runs on a
+            console you already own. <a href="#" data-goto="ps4">See the full PS4 reality check →</a></p>
+        </article>
+        <article class="card">
+          <p class="eyebrow">THE BIG PROMISE</p>
+          <h3>The walkthrough stops when you stop.</h3>
+          <p>Every checkpoint ends with a question and waits — no auto-scroll, no "next video in 5". Stuck,
+            dead, forgot where you are, accidentally sold the gun? There's a prepared answer for each.</p>
+          <button class="btn btn--ghost btn--sm" data-goto="walkthrough">Open the walkthrough</button>
+        </article>
+        <article class="card">
+          <p class="eyebrow">THE OTHER BIG PROMISE</p>
+          <h3>Pop-ups that ask, not tell.</h3>
+          <p>The beginner checks literally ask "do you have this yet?" and branch into a real answer whether
+            you say yes, no, "I'm broke", or "the game ate it".</p>
+          <button class="btn btn--ghost btn--sm" data-goto="beginner">Run the beginner checks</button>
+        </article>
+      </div>
+
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+          <span>WAKE UP SAMURAI</span><span>·</span><span>WE HAVE A CITY TO BURN</span><span>·</span>
+          <span>BUT FIRST, HAVE YOU EATEN?</span><span>·</span><span>THE COIN IS LOAD-BEARING</span><span>·</span>
+          <span>NO PHANTOM LIBERTY ON THIS CONSOLE</span><span>·</span><span>PREEM</span><span>·</span>
+          <span>WAKE UP SAMURAI</span><span>·</span><span>WE HAVE A CITY TO BURN</span><span>·</span>
+          <span>BUT FIRST, HAVE YOU EATEN?</span><span>·</span><span>THE COIN IS LOAD-BEARING</span><span>·</span>
+          <span>NO PHANTOM LIBERTY ON THIS CONSOLE</span><span>·</span><span>PREEM</span><span>·</span>
+        </div>
+      </div>
+
+      <div class="shard-note">
+        <p class="shard-note__title">// SHARD: READ ME OR DON'T</p>
+        <p>
+          Cyberpunk411 is a fan-made helper. Not affiliated with CD PROJEKT RED. It contains story spoilers —
+          every spoiler is fenced behind a <span class="tag tag--spoiler">SPOILER</span> gate you can open
+          yourself. It has no abilities a real eddie does not have, it cannot fix your framerate, and it
+          will not do your laundry. Everything else is fair game.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── 02 START ───────────────────────── -->
+    <section class="view" id="view-start">
+      <header class="view-head">
+        <p class="eyebrow">02 // ORIENTATION</p>
+        <h2>Start here, and actually read it</h2>
+        <p class="view-head__sub">
+          This is the boring-but-load-bearing stuff: what your PS4 build is, how the game's systems
+          actually work, and the ten decisions that make the first ten hours painless.
+        </p>
+      </header>
+      <div id="start-content"></div>
+    </section>
+
+    <!-- ───────────────────────── 03 ARSENAL ───────────────────────── -->
+    <section class="view" id="view-arsenal">
+      <header class="view-head">
+        <p class="eyebrow">03 // ARSENAL</p>
+        <h2>High-end guns and exactly where they live</h2>
+        <p class="view-head__sub">
+          Iconic weapons are unique, one-per-save guns with a fixed special effect. On the PS4 build they are
+          also <em>missable</em>: if a quest ends and you didn't loot the body, that gun is gone for that
+          playthrough. Each card below tells you the district, the quest, the exact route, and the moment it
+          becomes permanent.
+        </p>
+      </header>
+
+      <div class="filterbar">
+        <div class="filterbar__group" id="gun-filters">
+          <button class="filter is-active" data-filter="all">ALL</button>
+          <button class="filter" data-filter="pistol">PISTOLS</button>
+          <button class="filter" data-filter="rifle">RIFLES</button>
+          <button class="filter" data-filter="sniper">SNIPERS</button>
+          <button class="filter" data-filter="melee">MELEE BONUS</button>
+          <button class="filter" data-filter="early">EARLY GAME</button>
+          <button class="filter" data-filter="missable">MISSABLE</button>
+        </div>
+        <input class="search" id="gun-search" type="search" placeholder="Search gun, district, quest…" />
+      </div>
+
+      <div class="grid grid--2" id="gun-grid"></div>
+
+      <div class="callout callout--warn">
+        <h3>⚠ The rule of three for missable iconics</h3>
+        <ol>
+          <li><strong>Loot the body before you leave the area.</strong> Some bodies despawn, some quest areas lock.</li>
+          <li><strong>Don't sell iconics.</strong> Even a gun you hate is display-wall material and, more
+            importantly, upgradeable. Selling one is a one-way trip.</li>
+          <li><strong>Don't scrap the crafting spec.</strong> If a gun comes from a crafting spec, that spec is
+            the only way to make a higher-tier copy later.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ──────────────────── 04 INTERACTIVE WALKTHROUGH ──────────────────── -->
+    <section class="view" id="view-walkthrough">
+      <header class="view-head">
+        <p class="eyebrow">04 // INTERACTIVE WALKTHROUGH</p>
+        <h2>The walkthrough that waits for you</h2>
+        <p class="view-head__sub">
+          One checkpoint at a time. It never advances on its own — you press the button when you're actually
+          ready, and every checkpoint has fallback answers for the ways real playthroughs go sideways.
+        </p>
+      </header>
+
+      <div class="wt-shell">
+        <aside class="wt-rail">
+          <div class="wt-rail__head">
+            <span>CHAPTERS</span>
+            <button class="btn btn--mini" id="wt-reset" title="Wipe saved walkthrough progress">RESET</button>
+          </div>
+          <ol class="wt-chapters" id="wt-chapters"></ol>
+          <div class="wt-rail__foot">
+            <label class="switch">
+              <input type="checkbox" id="wt-spoilers" />
+              <span class="switch__track"></span>
+              <span class="switch__label">Show spoilers</span>
+            </label>
+            <p class="wt-rail__note">Progress saves on this device. Close the tab, come back, the assistant
+              remembers which checkpoint you were on.</p>
+          </div>
+        </aside>
+
+        <div class="wt-stage">
+          <div class="wt-progress">
+            <div class="wt-progress__fill" id="wt-progress-fill"></div>
+          </div>
+          <p class="wt-progress__label"><span id="wt-step-count">0 / 0 CHECKPOINTS</span> <span id="wt-chapter-label"></span></p>
+          <div id="wt-step"></div>
+          <div class="wt-idle" id="wt-idle">
+            <p><span class="blink">▮</span> Waiting on you, choom. The walkthrough is paused until you answer.</p>
+            <p class="wt-idle__small">If you walked away to make a sandwich: it's fine. It's still here. The sandwich is the priority.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── 05 BEGINNER CHECKS ───────────────────── -->
+    <section class="view" id="view-beginner">
+      <header class="view-head">
+        <p class="eyebrow">05 // BEGINNER CHECKS</p>
+        <h2>Do you have it yet?</h2>
+        <p class="view-head__sub">
+          Pop-up windows for the beginner items that matter — the free cyberware, the free gun, the free car,
+          the stuff people miss because the game never explains it. Each check asks first and then answers
+          the answer you actually gave.
+        </p>
+      </header>
+      <div class="checklist-summary">
+        <div class="checklist-summary__ring" id="check-ring"><span id="check-ring-text">0%</span></div>
+        <div>
+          <h3 id="check-headline">Nothing checked yet</h3>
+          <p id="check-sub">Hit "ASK ME" on any card below. It opens a pop-up, asks a direct question, and
+            only then gives advice. You can re-run any check at any time.</p>
+        </div>
+      </div>
+      <div class="grid grid--3" id="beginner-grid"></div>
+    </section>
+
+    <!-- ───────────────────── 06 MONEY ───────────────────── -->
+    <section class="view" id="view-money">
+      <header class="view-head">
+        <p class="eyebrow">06 // EDDIES</p>
+        <h2>Money, and how the PS4 economy actually works</h2>
+        <p class="view-head__sub">Vendors have finite wallets. Your inventory has finite space. These two
+          facts explain 90% of "I have no money" in Cyberpunk 2077 on last-gen.</p>
+      </header>
+      <div id="money-content"></div>
+    </section>
+
+    <!-- ───────────────────── 07 PS4 ───────────────────── -->
+    <section class="view" id="view-ps4">
+      <header class="view-head">
+        <p class="eyebrow">07 // PS4 TRUTH</p>
+        <h2>What your console does and does not get</h2>
+        <p class="view-head__sub">No wishful thinking, no "just get a PS5" — you're on PS4, here's the build
+          you have, the way it behaves, and how to keep it stable for a 100-hour playthrough.</p>
+      </header>
+      <div id="ps4-content"></div>
+    </section>
+
+    <!-- ───────────────────── 08 FAQ ───────────────────── -->
+    <section class="view" id="view-faq">
+      <header class="view-head">
+        <p class="eyebrow">08 // FAQ, GLOSSARY, JOKES</p>
+        <h2>Everything else, alphabetised badly</h2>
+        <p class="view-head__sub">Plus the glossary. Any underlined-in-yellow term anywhere in this app has a
+          definition you can hover or tap.</p>
+      </header>
+      <div class="grid grid--2 grid--top">
+        <div>
+          <h3 class="subhead">FAQ</h3>
+          <div id="faq-list" class="accordion"></div>
+        </div>
+        <div>
+          <h3 class="subhead">Glossary</h3>
+          <div id="glossary-list" class="glossary"></div>
+          <h3 class="subhead subhead--mt">The Joke Drawer</h3>
+          <div class="joke-drawer">
+            <p id="joke-drawer-text">Press the button. It's a drawer full of jokes. It's not a metaphor.</p>
+            <button class="btn btn--ghost btn--sm" id="joke-drawer-btn">OPEN THE DRAWER</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__brand">CYBERPUNK<span>411</span></p>
+        <p class="footer__small">Fan-made field assistant · PS4 build · patch 1.6x · Night City, NC 2077</p>
+        <p class="footer__small footer__small--dim">Not affiliated with CD PROJEKT RED. "Cyberpunk 2077" is a
+          trademark of CD PROJEKT RED. This is a free fan project made by someone who loves last-gen.</p>
+      </div>
+      <div>
+        <p class="footer__label">SHORTCUTS</p>
+        <p class="footer__small"><button class="linklike" data-goto="walkthrough">Walkthrough</button> ·
+          <button class="linklike" data-goto="arsenal">Guns</button> ·
+          <button class="linklike" data-goto="beginner">Checks</button> ·
+          <button class="linklike" data-goto="ps4">PS4 truth</button></p>
+      </div>
+      <div>
+        <p class="footer__label">A SMALL SECRET</p>
+        <p class="footer__small" id="footer-secret">The coin knows. Click it seven times and it will tell you.</p>
+      </div>
+    </div>
+    <button class="do-not-press" id="do-not-press" aria-label="Do not press">DO NOT PRESS</button>
+  </footer>
+</div>
+
+<!-- Modal root (beginner pop-ups, gun details, generic dialogs) -->
+<div class="modal-root" id="modal-root" hidden>
+  <div class="modal-backdrop" data-close="1"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal__chrome">
+      <span class="modal__dots"><i></i><i></i><i></i></span>
+      <span class="modal__title" id="modal-title">WINDOW</span>
+      <button class="modal__x" aria-label="Close" data-close="1">✕</button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Toast stack -->
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip" hidden></div>
+
+<!-- Loading overlays for section changes -->
+<div class="wipe" id="wipe" aria-hidden="true"><div class="wipe__inner"><span class="wipe__label" id="wipe-label">JACKING IN</span><span class="wipe__sub" id="wipe-sub"></span></div></div>
+
+<script src="js/data/guns.js"></script>
+<script src="js/data/walkthrough.js"></script>
+<script src="js/data/beginner.js"></script>
+<script src="js/data/lore.js"></script>
+<script src="js/core.js"></script>
+<script src="js/coin.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/walkthrough.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
