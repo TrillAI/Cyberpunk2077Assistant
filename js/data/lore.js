@@ -92,6 +92,41 @@ window.CP411_LORE = {
         </ol>`
     },
     {
+      eyebrow: 'BUILD PLANNING · PATCH 1.6',
+      title: 'Spend attributes like you cannot take them back',
+      html: `
+        <p>On this version, <strong>attribute choices are the expensive part</strong>: perks can be refunded, but you should treat
+        attribute points as committed because the one-time reset is your only safety net. Pick the kind of combat you enjoy first,
+        then build around it. Do not copy a 2.0 build guide; its perk trees and cyberware rules do not exist on PS4.</p>
+        <table>
+          <tr><th>If you want to…</th><th>Build around</th><th>Useful second lane</th><th>Why it works</th></tr>
+          <tr><td>Fight up close with shotguns, blunt weapons, or fists</td><td><strong>Body</strong></td><td>Technical Ability for crafting, or Reflexes for blades</td><td>Body supports close-range damage and staying power. You can make mistakes and still survive the trade.</td></tr>
+          <tr><td>Use pistols, assault rifles, or blades</td><td><strong>Reflexes</strong></td><td>Body for survivability, or Cool for stealth</td><td>Choose one main weapon family for your perks instead of spreading them across every gun you pick up.</td></tr>
+          <tr><td>Hack cameras and disable enemies before entering</td><td><strong>Intelligence</strong></td><td>Cool for stealth, or Technical Ability for crafting</td><td>Quickhacks reward preparation: cameras and access points can solve a room before it becomes a firefight.</td></tr>
+          <tr><td>Craft gear and lean on Tech weapons</td><td><strong>Technical Ability</strong></td><td>Your preferred weapon stat</td><td>Crafting adds flexibility and lets you keep useful gear current, but it is strongest when paired with a clear combat lane.</td></tr>
+          <tr><td>Play quietly and control encounters</td><td><strong>Cool</strong></td><td>Reflexes for pistols/blades, or Intelligence for hacks</td><td>Stealth is a real approach, not just a damage bonus: scout first, isolate targets, and keep an exit plan.</td></tr>
+        </table>
+        <p><strong>Practical rule:</strong> choose one primary attribute for your favorite weapon or ability, then one secondary attribute
+        that fixes its weakness. Keep the rest as support rather than trying to max every tree. Spend perk points freely to test perks;
+        refund them when a perk is not earning its place.</p>
+        <div class="callout callout--info"><h4>Build check before spending</h4>
+          <ol>
+            <li>What is my go-to way to remove a dangerous enemy?</li>
+            <li>Which attribute actually improves that weapon or ability in the 1.6 tree?</li>
+            <li>What gets me out of trouble when that plan fails: health, stealth, hacking, or range?</li>
+          </ol>
+          <p>If you cannot answer the first question yet, hold a few attribute points. There is no prize for spending them immediately.</p>
+        </div>
+        <h4>Quick combat diagnosis</h4>
+        <ul>
+          <li><strong>Enemies take forever to drop:</strong> stop rotating through six weapon types; focus perks and upgrades on one reliable weapon family.</li>
+          <li><strong>You die while aiming:</strong> break line of sight, use cover, heal before critical health, and add a defensive cyberware option when a ripperdoc has one you can afford.</li>
+          <li><strong>Stealth keeps collapsing:</strong> scout with optics, mark enemies, check cameras, and disable or avoid the watcher before attacking.</li>
+          <li><strong>Your favorite iconic falls behind:</strong> upgrade it at a crafting station when materials allow; an iconic is not automatically level-matched to V.</li>
+        </ul>
+        <p class="prose__note"><strong>Insight:</strong> the strongest early build is usually the one you can execute consistently on a controller and a variable frame rate—not the one with the fanciest spreadsheet. Lower difficulty is a valid tuning tool while learning a new playstyle.</p>`
+    },
+    {
       eyebrow: 'HOW TO READ THIS APP',
       title: 'Three sections do three different jobs',
       html: `

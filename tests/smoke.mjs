@@ -65,6 +65,13 @@ for (const view of ['start', 'arsenal', 'walkthrough', 'beginner', 'money', 'ps4
   check('section renders: ' + view, doc.getElementById('view-' + view).classList.contains('is-active'));
 }
 
+click(doc.querySelector('.tab[data-view="start"]'));
+await sleep(150);
+const startGuide = doc.getElementById('start-content').textContent;
+check('Start Here adds PS4 1.6 build-planning advice', /BUILD PLANNING/.test(doc.getElementById('start-content').textContent));
+check('build advice covers all five attributes', ['Body', 'Reflexes', 'Intelligence', 'Technical Ability', 'Cool'].every((attribute) => startGuide.includes(attribute)));
+check('build advice explains attribute commitment and combat troubleshooting', /attribute choices are the expensive part/i.test(startGuide) && /Enemies take forever to drop/i.test(startGuide));
+
 click(doc.querySelector('.tab[data-view="arsenal"]'));
 await sleep(380);
 click(doc.querySelector('[data-filter="pistol"]'));
