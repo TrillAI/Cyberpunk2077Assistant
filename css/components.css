@@ -333,6 +333,11 @@
 .prose th{ background:#0a0d13; color:var(--yellow); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; }
 .prose td{ color:var(--text-dim); }
 .prose td strong{ color:#fff; }
+.prose table{ display:block; overflow-x:auto; }
+.prose .callout{ margin:18px 0; padding:16px 18px; }
+.prose .callout h4{ color:var(--cyan); margin-top:0; }
+.prose__note{ border-left:2px solid var(--yellow); padding:10px 14px; background:rgba(252,238,10,.045); }
+.prose__note strong{ color:var(--yellow); }
 .subhead{ font-size:.72rem; letter-spacing:.24em; color:var(--yellow); margin:0 0 1em; }
 .subhead--mt{ margin-top:2.4em; }
 

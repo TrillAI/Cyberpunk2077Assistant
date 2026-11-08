@@ -13,7 +13,7 @@ Open `index.html`. That is the entire installation process.
 | Section | What it does |
 |---|---|
 | **01 · Jack In** | Landing page, the 3D spinning eddie, a live rotation readout and the ground rules. |
-| **02 · Start Here** | Orientation: how the 1.6 systems actually work, the ten decisions that make the first ten hours painless. |
+| **02 · Start Here** | Orientation: how the 1.6 systems actually work, the ten decisions that make the first ten hours painless, plus build-planning advice for all five attributes, combat troubleshooting, and practical guidance that avoids 2.0-only systems. |
 | **03 · High-End Guns** | 14 iconic weapons mapped with district, quest, exact route, timing window, "why it's worth it", gotchas and a PS4 note. Filter by type, early-game or **missable**; search by name, district or quest. |
 | **04 · Walkthrough** | Interactive, checkpoint-based, **waits for you**. Six chapters, 26 checkpoints. Every checkpoint has 3–4 prepared answers (done / stuck / game did something weird / skip me) so there are no dead ends. Progress is saved per device. |
 | **05 · Beginner Checks** | Pop-up windows that **ask before they assume**. Nine beginner items — free cyberware, health items, the two Konpeki Plaza iconics, the free talking pistol, Kerenzikov, upgrades, money buffer. Each pop-up branches on the exact answer you give. |
